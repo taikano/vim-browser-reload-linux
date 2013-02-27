@@ -1,8 +1,9 @@
 "=========================================================
 " File:        browser-reload-linux.vim
 " Author:      lordm <lordm2005[at]gmail.com>
-" Last Change: 17-Mar-2012.
-" Version:     1.0
+" Author:      Stefan Koch <programming@stefan-koch.name>
+" Last Change: 27-Feb-2013.
+" Version:     1.1
 " WebPage:     https://github.com/lordm/vim-browser-reload-linux
 " License:     BSD
 "==========================================================
@@ -10,7 +11,11 @@
 
 if !exists('g:returnAppFlag')
     let g:returnAppFlag = 1
-endif 
+endif
+
+if !exists('g:browserUseWindowTitle')
+    let g:browserUseWindowTitle = 0
+endif
 
 function! s:ReloadBrowser(browser)
     let l:currentWindow = substitute(system('xdotool getactivewindow'), "\n", "", "")
@@ -19,10 +24,16 @@ function! s:ReloadBrowser(browser)
     if ( a:browser == "Chrome" || a:browser == "Chromium-browser" )
         let l:activateCommand = ""
     endif
-    exec "silent ! xdotool search --onlyvisible --class " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
+
+    if (g:browserUseWindowTitle == 1)
+        exec "silent ! xdotool search --onlyvisible --class " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
+    else
+        exec "silent ! xdotool search --onlyvisible --name " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
+    endif
 
     if g:returnAppFlag
         exec "silent ! xdotool windowactivate " . l:currentWindow
+        redraw!
     endif 
 endfunction
 
@@ -32,7 +43,11 @@ command! -bar ChromeReloadStart ChromeReloadStop | autocmd BufWritePost <buffer>
 command! -bar ChromeReloadStop autocmd! BufWritePost <buffer>
 
 " Chromium
-command! -bar ChromiumReload call s:ReloadBrowser("Chromium-browser")
+if (g:browserUseWindowTitle == 0) " Classname and Title are different
+    command! -bar ChromiumReload call s:ReloadBrowser("Chromium-browser")
+else
+    command! -bar ChromiumReload call s:ReloadBrowser("Chromium")
+endif
 command! -bar ChromiumReloadStart ChromiumReloadStop | autocmd BufWritePost <buffer> ChromiumReload
 command! -bar ChromiumReloadStop autocmd! BufWritePost <buffer>
 
