@@ -33,7 +33,6 @@ function! s:ReloadBrowser(browser)
 
     if g:returnAppFlag
         exec "silent ! xdotool windowactivate " . l:currentWindow
-        redraw!
     endif 
 endfunction
 
