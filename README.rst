@@ -8,6 +8,7 @@ Description
 Vim plugin to reload your browser. 
 This is a linux compatible version inspired by the mac version https://github.com/tell-k/vim-browsereload-mac
 
+This version includes a method for searching by title name instead of class name.
 
 Required
 =====================
@@ -62,7 +63,14 @@ change variable "g:returnAppFlag" to 0
  "default is 1
  let g:returnAppFlag = 1
 
-If you want old style commad, write this setting in your .vimrc
+You can set the plugin to use title names with the following command:
+
+::
+ 
+ "default is 0
+ let g:browserUseWindowTitle = 1
+
+If you want old style command, write this setting in your .vimrc
 
 ::
 
