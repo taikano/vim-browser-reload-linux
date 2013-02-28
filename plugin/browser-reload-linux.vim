@@ -34,9 +34,9 @@ function! s:ReloadBrowser(browser)
     endif
 
     if (g:browserUseWindowTitle == 0)
-        exec "silent ! xdotool search --onlyvisible --class " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
+        exec "silent ! xdotool search --onlyvisible --class '" . a:browser . "' " . l:activateCommand . " key --clearmodifiers ctrl+r"
     else
-        exec "silent ! xdotool search --onlyvisible --name " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
+        exec "silent ! xdotool search --onlyvisible --name '" . a:browser . "' " .  l:activateCommand . " key --clearmodifiers ctrl+r"
     endif
 
     if g:returnAppFlag
