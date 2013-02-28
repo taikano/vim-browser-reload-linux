@@ -64,6 +64,7 @@ if (g:browserUseWindowTitle == 0)
     command! -bar FirefoxReload call s:ReloadBrowser("Firefox")
 else
     command! -bar FirefoxReload call s:ReloadBrowser(g:browserFirefoxTitle)
+endif
 command! -bar FirefoxReloadStart FirefoxReloadStop | autocmd BufWritePost <buffer> FirefoxReload
 command! -bar FirefoxReloadStop autocmd! BufWritePost <buffer>
 
