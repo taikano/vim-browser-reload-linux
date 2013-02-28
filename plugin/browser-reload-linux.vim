@@ -25,7 +25,7 @@ function! s:ReloadBrowser(browser)
         let l:activateCommand = ""
     endif
 
-    if (g:browserUseWindowTitle == 1)
+    if (g:browserUseWindowTitle == 0)
         exec "silent ! xdotool search --onlyvisible --class " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
     else
         exec "silent ! xdotool search --onlyvisible --name " . a:browser . l:activateCommand . " key --clearmodifiers ctrl+r"
