@@ -2,7 +2,7 @@
 " File:        browser-reload-linux.vim
 " Author:      lordm <lordm2005[at]gmail.com>
 " Author:      Stefan Koch <programming@stefan-koch.name>
-" Last Change: 27-Feb-2013.
+" Last Change: 28-Feb-2013.
 " Version:     1.1
 " WebPage:     https://github.com/lordm/vim-browser-reload-linux
 " License:     BSD
@@ -25,7 +25,23 @@ if !exists('g:browserChromiumTitle')
     let g:browserChromiumTitle = "Chromium"
 endif
 
-function! s:ReloadBrowser(browser)
+if !exists('g:browserChromeTitle')
+    let g:browserChromeTitle = "Chrome"
+endif
+
+if !exists('g:browserOperaTitle')
+    let g:browserOperaTitle = "Opera"
+endif
+
+function! s:ReloadBrowserClass(browser, activateCommand)
+    exec "silent ! xdotool search --onlyvisible --class '" . a:browser . "' " . a:activateCommand . " key --clearmodifiers ctrl+r"
+endfunction
+
+function! s:ReloadBrowserName(browser, activateCommand)
+    exec "silent ! xdotool search --onlyvisible --name '" . a:browser . "'     " . a:activateCommand . " key --clearmodifiers ctrl+r"
+endfunction
+
+function! s:ReloadBrowser(browserClass, browserName)
     let l:currentWindow = substitute(system('xdotool getactivewindow'), "\n", "", "")
 
     let l:activateCommand = " windowactivate "
@@ -34,9 +50,9 @@ function! s:ReloadBrowser(browser)
     endif
 
     if (g:browserUseWindowTitle == 0)
-        exec "silent ! xdotool search --onlyvisible --class '" . a:browser . "' " . l:activateCommand . " key --clearmodifiers ctrl+r"
+        call s:ReloadBrowserClass(a:browserClass, l:activateCommand)
     else
-        exec "silent ! xdotool search --onlyvisible --name '" . a:browser . "' " .  l:activateCommand . " key --clearmodifiers ctrl+r"
+        call s:ReloadBrowserName(a:browserName, l:activateCommand)
     endif
 
     if g:returnAppFlag
@@ -46,30 +62,22 @@ function! s:ReloadBrowser(browser)
 endfunction
 
 " Google Chrome
-command! -bar ChromeReload call s:ReloadBrowser("Chrome")
+command! -bar ChromeReload call s:ReloadBrowser("Chrome", g:browserChromeTitle)
 command! -bar ChromeReloadStart ChromeReloadStop | autocmd BufWritePost <buffer> ChromeReload
 command! -bar ChromeReloadStop autocmd! BufWritePost <buffer>
 
 " Chromium
-if (g:browserUseWindowTitle == 0) " Classname and Title are different
-    command! -bar ChromiumReload call s:ReloadBrowser("Chromium-browser")
-else
-    command! -bar ChromiumReload call s:ReloadBrowser(g:browserChromiumTitle)
-endif
+command! -bar ChromiumReload call s:ReloadBrowser("Chromium-browser", g:browserChromiumTitle)
 command! -bar ChromiumReloadStart ChromiumReloadStop | autocmd BufWritePost <buffer> ChromiumReload
 command! -bar ChromiumReloadStop autocmd! BufWritePost <buffer>
 
 " Firefox
-if (g:browserUseWindowTitle == 0)
-    command! -bar FirefoxReload call s:ReloadBrowser("Firefox")
-else
-    command! -bar FirefoxReload call s:ReloadBrowser(g:browserFirefoxTitle)
-endif
+command! -bar FirefoxReload call s:ReloadBrowser("Firefox", g:browserFirefoxTitle)
 command! -bar FirefoxReloadStart FirefoxReloadStop | autocmd BufWritePost <buffer> FirefoxReload
 command! -bar FirefoxReloadStop autocmd! BufWritePost <buffer>
 
 " Opera
-command! -bar OperaReload call s:ReloadBrowser("Opera")
+command! -bar OperaReload call s:ReloadBrowser("Opera", g:browserOperaTitle)
 command! -bar OperaReloadStart OperaReloadStop | autocmd BufWritePost <buffer> OperaReload
 command! -bar OperaReloadStop autocmd! BufWritePost <buffer>
 
