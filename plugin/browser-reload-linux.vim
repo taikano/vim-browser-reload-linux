@@ -17,6 +17,14 @@ if !exists('g:browserUseWindowTitle')
     let g:browserUseWindowTitle = 0
 endif
 
+if !exists('g:browserFirefoxTitle')
+    let g:browserFirefoxTitle = "Mozilla Firefox"
+endif
+
+if !exists('g:browserChromiumTitle')
+    let g:browserChromiumTitle = "Chromium"
+endif
+
 function! s:ReloadBrowser(browser)
     let l:currentWindow = substitute(system('xdotool getactivewindow'), "\n", "", "")
 
@@ -46,13 +54,16 @@ command! -bar ChromeReloadStop autocmd! BufWritePost <buffer>
 if (g:browserUseWindowTitle == 0) " Classname and Title are different
     command! -bar ChromiumReload call s:ReloadBrowser("Chromium-browser")
 else
-    command! -bar ChromiumReload call s:ReloadBrowser("Chromium")
+    command! -bar ChromiumReload call s:ReloadBrowser(g:browserChromiumTitle)
 endif
 command! -bar ChromiumReloadStart ChromiumReloadStop | autocmd BufWritePost <buffer> ChromiumReload
 command! -bar ChromiumReloadStop autocmd! BufWritePost <buffer>
 
 " Firefox
-command! -bar FirefoxReload call s:ReloadBrowser("Firefox")
+if (g:browserUseWindowTitle == 0)
+    command! -bar FirefoxReload call s:ReloadBrowser("Firefox")
+else
+    command! -bar FirefoxReload call s:ReloadBrowser(g:browserFirefoxTitle)
 command! -bar FirefoxReloadStart FirefoxReloadStop | autocmd BufWritePost <buffer> FirefoxReload
 command! -bar FirefoxReloadStop autocmd! BufWritePost <buffer>
 
